@@ -1,24 +1,23 @@
 //
 //  WWJRefreshHeaderView.m
-//  MoneyEra
 //
 //  Created by wwj on 2018/7/24.
 //  Copyright © 2018年 WW. All rights reserved.
 //
 
-#import "WWJRefreshHeaderView.h"
+#import "WWJRefreshHeaderAdapterView.h"
+#define isiPhoneX ([UIScreen mainScreen].bounds.size.height == 812)
 
-@interface WWJRefreshHeaderView()
-{
+@interface WWJRefreshHeaderAdapterView(){
     __unsafe_unretained UIImageView *_arrowView;
 }
 @property (weak, nonatomic) UIActivityIndicatorView *loadingView;
 @end
 
-@implementation WWJRefreshHeaderView
+@implementation WWJRefreshHeaderAdapterView
+
 #pragma mark - 懒加载子控件
-- (UIImageView *)arrowView
-{
+- (UIImageView *)arrowView{
     if (!_arrowView) {
         UIImageView *arrowView = [[UIImageView alloc] initWithImage:[NSBundle mj_arrowImage]];
         [self addSubview:_arrowView = arrowView];
@@ -26,8 +25,7 @@
     return _arrowView;
 }
 
-- (UIActivityIndicatorView *)loadingView
-{
+- (UIActivityIndicatorView *)loadingView{
     if (!_loadingView) {
         UIActivityIndicatorView *loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:self.activityIndicatorViewStyle];
         loadingView.hidesWhenStopped = YES;
@@ -37,15 +35,13 @@
 }
 
 #pragma mark - 重写父类的方法
-- (void)prepare
-{
+- (void)prepare{
     [super prepare];
-    self.mj_h += 44.0f;
+    self.mj_h += isiPhoneX ? 44.0f : 20.0f;
     self.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
 }
 
-- (void)placeSubviews
-{
+- (void)placeSubviews{
     [super placeSubviews];
 
     // 箭头的中心点
@@ -59,7 +55,7 @@
         CGFloat textWidth = MAX(stateWidth, timeWidth);
         arrowCenterX -= textWidth / 2 + self.labelLeftInset;
     }
-    CGFloat arrowCenterY = self.mj_h * 0.5 + 44.0f * 0.5;
+    CGFloat arrowCenterY = self.mj_h * 0.5 + (isiPhoneX ? (44.0f * 0.5):(20.0f * 0.5));
     CGPoint arrowCenter = CGPointMake(arrowCenterX, arrowCenterY);
 
     // 箭头
@@ -84,11 +80,11 @@
         // 状态
         if (noConstrainsOnStatusLabel) self.stateLabel.frame = self.bounds;
     } else {
-        CGFloat stateLabelH = self.mj_h * 0.5 - 44.0f * 0.5f;
+        CGFloat stateLabelH = self.mj_h * 0.5 - (isiPhoneX ? (44.0f * 0.5f) : (20.0f * 0.5));
         // 状态
         if (noConstrainsOnStatusLabel) {
             self.stateLabel.mj_x = 0;
-            self.stateLabel.mj_y += 44.0f;
+            self.stateLabel.mj_y += isiPhoneX ? 44.0f : 20.0f;
             self.stateLabel.mj_w = self.mj_w;
             self.stateLabel.mj_h = stateLabelH;
         }
@@ -96,7 +92,7 @@
         // 更新时间
         if (self.lastUpdatedTimeLabel.constraints.count == 0) {
             self.lastUpdatedTimeLabel.mj_x = 0;
-            self.lastUpdatedTimeLabel.mj_y = stateLabelH + 44.0f;
+            self.lastUpdatedTimeLabel.mj_y = stateLabelH + (isiPhoneX ? 44.0f : 20.0f);
             self.lastUpdatedTimeLabel.mj_w = self.mj_w;
             self.lastUpdatedTimeLabel.mj_h = self.mj_h - self.lastUpdatedTimeLabel.mj_y;
         }
